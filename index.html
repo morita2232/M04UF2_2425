@@ -29,6 +29,8 @@ let rect;
 
 let rect_dir = 1;
 
+let rect_pos = { x: 400, y: 225 };
+
 function preload ()
 {
 
@@ -39,19 +41,34 @@ function preload ()
 function create ()
 {
 
-	rect = this.add.rectangle(400, 225, 32, 32, 0xffffff);
+	rect = this.add.rectangle(rect_pos.x, rect_pos.y, 32, 32, 0xffffff);
+
+addEventListener('keydown', function (event) {
+		const key = event.key;
+
+		switch (key) {
+			case "ArrowLeft":
+				rect_pos.x -= rect_dir;
+				break;
+			case "ArrowRight":
+				rect_pos.x += rect_dir;
+				break;
+			case "ArrowUp":
+				rect_pos.y -= rect_dir;
+				break;
+			case "ArrowDown":
+				rect_pos.y += rect_dir;
+				break;
+		}
+	});
 
 }
 
 function update ()
 {
 
-	rect.x += rect_dir;
-	
-	if (rect.x <= 0 || rect.x >= canvas_w)
-	{
-		rect_dir = -rect_dir;
-	}
+	rect.x = rect_pos.x;
+	rect.y = rect_pos.y;
 
 }
 
