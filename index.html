@@ -25,24 +25,44 @@ scene: {
 
 let game = new Phaser.Game(config);
 
-let rect;
+//let rect;
 
-let rect_dir = 5;
+//let rect_dir = 5;
 
-let rect_pos = { x: 400, y: 225 };
+let huevera_b, huevera_m, huevera_d;
 
-new ImageFile(loader, key, "huevo.png");
+let huevo_b, huevo_m, huevo_d;
+
+
+//let rect_pos = { x: 400, y: 225 };
 
 function preload ()
 {
 
+this.load.image('huevera', 'huevera.png');
 
+this.load.image('huevo', 'huevo.png');
 
 }
 
 function create ()
 {
 
+
+huevera_b = this.add.image(400, 160, 'huevera');
+
+huevera_b.setScale(.5);
+
+huevera_b.setTint(Phaser.Display.Color.GetColor(255, 255, 0));
+
+huevo_b = this.add.image(400, 250, 'huevo');
+
+huevo_b.setScale(.5);
+
+huevo_b.setTint(Phaser.Display.Color.GetColor(0, 255, 0));
+
+
+/*
 	rect = this.add.rectangle(rect_pos.x, rect_pos.y, 32, 32, 0xffffff);
 
 addEventListener('keydown', function (event) {
@@ -63,14 +83,14 @@ addEventListener('keydown', function (event) {
 				break;
 		}
 	});
-
+*/
 }
 
 function update ()
 {
 
-	rect.x = rect_pos.x;
-	rect.y = rect_pos.y;
+//	rect.x = rect_pos.x;
+//	rect.y = rect_pos.y;
 
 }
 
