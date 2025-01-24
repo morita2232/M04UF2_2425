@@ -27,9 +27,11 @@ let game = new Phaser.Game(config);
 
 let rect;
 
-let rect_dir = 1;
+let rect_dir = 5;
 
 let rect_pos = { x: 400, y: 225 };
+
+new ImageFile(loader, key, "huevo.png");
 
 function preload ()
 {
