@@ -25,16 +25,9 @@ scene: {
 
 let game = new Phaser.Game(config);
 
-//let rect;
-
-//let rect_dir = 5;
-
 let huevera_b, huevera_m, huevera_d;
 
 let huevo_b, huevo_m, huevo_d;
-
-
-//let rect_pos = { x: 400, y: 225 };
 
 function preload ()
 {
@@ -43,56 +36,67 @@ this.load.image('huevera', 'huevera.png');
 
 this.load.image('huevo', 'huevo.png');
 
+this.load.image('background', 'farm.jpg');
+
+this.load.image('hay', 'Hay.png');
+
 }
 
 function create ()
 {
 
+this.add.image(400, 225, 'background');
 
-huevera_b = this.add.image(400, 160, 'huevera');
+hay = this.add.image(100, 185, 'hay');
+hay.setScale(.5);
 
+secondHay = this.add.image(100, 325, 'hay');
+secondHay.setScale(.5);
+
+huevera_b = this.add.image(100, 110, 'huevera');
 huevera_b.setScale(.5);
+huevera_b.setTint(Phaser.Display.Color.GetColor(255, 255, 255));
 
-huevera_b.setTint(Phaser.Display.Color.GetColor(255, 255, 0));
+huevo_b = this.add.image(450, 250, 'huevo');
+//huevo_b.setScale(.5);
+huevo_b.setTint(Phaser.Display.Color.GetColor(225, 225, 225));
+huevo_b.setInteractive();
+huevo_b.on('pointerdown', function(){
+console.log('Huevo blanco!');
+});
 
-huevo_b = this.add.image(400, 250, 'huevo');
+huevera_m = this.add.image(100, 250, 'huevera');
+huevera_m.setScale(.5);
+huevera_m.setTint(Phaser.Display.Color.GetColor(153,76, 0));
 
-huevo_b.setScale(.5);
+huevo_m = this.add.image(350, 250, 'huevo');
+//huevo_m.setScale(.5);
+huevo_m.setTint(Phaser.Display.Color.GetColor(153, 76, 0));
+huevo_m.setInteractive();
+huevo_m.on('pointerdown', function(){
+console.log('Huevo marron!');
+});
 
-huevo_b.setTint(Phaser.Display.Color.GetColor(0, 255, 0));
+huevera_d = this.add.image(100, 390, 'huevera');
+huevera_d.setScale(.5);
+huevera_d.setTint(Phaser.Display.Color.GetColor(188, 195, 0));
+huevera_d.preFX.addGlow();
 
+huevo_d = this.add.image(550, 250, 'huevo');
+//huevo_d.setScale(.5);
+huevo_d.setTint(Phaser.Display.Color.GetColor(188, 195, 0));
+huevo_d.preFX.addGlow();
+huevo_d.setInteractive();
+huevo_d.on('pointerdown', function(){
+console.log('Huevo dorado!');
+});
 
-/*
-	rect = this.add.rectangle(rect_pos.x, rect_pos.y, 32, 32, 0xffffff);
-
-addEventListener('keydown', function (event) {
-		const key = event.key;
-
-		switch (key) {
-			case "ArrowLeft":
-				rect_pos.x -= rect_dir;
-				break;
-			case "ArrowRight":
-				rect_pos.x += rect_dir;
-				break;
-			case "ArrowUp":
-				rect_pos.y -= rect_dir;
-				break;
-			case "ArrowDown":
-				rect_pos.y += rect_dir;
-				break;
-		}
-	});
-*/
 }
 
 function update ()
 {
-
-//	rect.x = rect_pos.x;
-//	rect.y = rect_pos.y;
-
 }
+
 
 
 		</script>
