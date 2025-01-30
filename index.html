@@ -18,7 +18,8 @@ height: canvas_h,
  physics: {
     default: 'arcade',
     arcade: {
-     debug: true 
+     debug: true,
+	 gravity: { y: 200}
     }
   },
 
@@ -42,7 +43,9 @@ let x_huevera = 100;
 
 let y_huevo = 250;
 
-let inZone = false;
+let B_inZone = false;
+let M_inZone = false;
+let D_inZone = false;
 
 function preload ()
 {
@@ -74,9 +77,14 @@ huevera_b.setTint(Phaser.Display.Color.GetColor(255, 255, 255));
 
 huevera_b.setSize(200, 200, true);
 
+/*
+
 huevo_b = this.physics.add.image(450, y_huevo, 'huevo');
 huevo_b.setTint(Phaser.Display.Color.GetColor(225, 225, 225));
 huevo_b.setInteractive({draggable:true});
+
+*/
+
 huevo_b.on('pointerdown', function(){
 console.log('Huevo blanco!');
 this.setScale(1.3);
@@ -90,16 +98,26 @@ object.setScale(1);
 });
 
 this.physics.add.overlap(huevera_b, huevo_b, function() {
-inZone = true;
+B_inZone = true;
 });
 
-huevera_m = this.add.image(x_huevera, y_huevo, 'huevera');
+huevo_b.setBounce(1, 1);
+huevo_b.setCollideWorldBounds(true);
+
+huevera_m = this.physics.add.staticImage(x_huevera, y_huevo, 'huevera');
 huevera_m.setScale(sprite_scale);
 huevera_m.setTint(Phaser.Display.Color.GetColor(153,76, 0));
 
-huevo_m = this.add.image(350, y_huevo, 'huevo');
+huevera_m.setSize(200, 200, true);
+
+/*
+
+huevo_m = this.physics.add.image(350, y_huevo, 'huevo');
 huevo_m.setTint(Phaser.Display.Color.GetColor(153, 76, 0));
 huevo_m.setInteractive({draggable:true});
+
+*/
+
 huevo_m.on('pointerdown', function(){
 console.log('Huevo marron!');
 this.setScale(1.3);
@@ -112,17 +130,31 @@ this.input.on('dragend', function(pointer, object, x, y){
 object.setScale(1);
 });
 
-huevera_d = this.add.image(x_huevera, 390, 'huevera');
+this.physics.add.overlap(huevera_m, huevo_m, function() {
+M_inZone = true;
+});
+
+huevo_m.setBounce(1, 1);
+huevo_m.setCollideWorldBounds(true);
+
+huevera_d = this.physics.add.staticImage(x_huevera, 390, 'huevera');
 huevera_d.setScale(sprite_scale);
 huevera_d.setTint(Phaser.Display.Color.GetColor(188, 195, 0));
 huevera_d.preFX.addGlow();
 //huevera_d.setRotation(90); forma yo
 //huevera_d.angle = 90; forma rafa
 
-huevo_d = this.add.image(550, y_huevo, 'huevo');
+huevera_d.setSize(200, 200, true);
+
+/*
+
+huevo_d = this.physics.add.image(550, y_huevo, 'huevo');
 huevo_d.setTint(Phaser.Display.Color.GetColor(188, 195, 0));
 huevo_d.preFX.addGlow();
 huevo_d.setInteractive({draggable:true});
+
+*/
+
 huevo_d.on('pointerdown', function(){
 console.log('Huevo dorado!');
 this.setScale(1.3);
@@ -135,14 +167,61 @@ this.input.on('dragend', function(pointer, object, x, y){
 object.setScale(1);
 });
 
+this.physics.add.overlap(huevera_d, huevo_d, function() {
+D_inZone = true;
+});
+
+huevo_d.setBounce(1, 1);
+huevo_d.setCollideWorldBounds(true);
+
+this.creacionHuevos();
+
 }
+
+function creacionHuevos(){
+
+let numero = Phaser.Math.Between(1, 3);
+
+if (numero == 1){
+
+huevo_b = this.physics.add.image(450, y_huevo, 'huevo');
+huevo_b.setTint(Phaser.Display.Color.GetColor(225, 225, 225));
+huevo_b.setInteractive({draggable:true});
+
+}else if (numero == 2){
+
+huevo_m = this.physics.add.image(350, y_huevo, 'huevo');
+huevo_m.setTint(Phaser.Display.Color.GetColor(153, 76, 0));
+huevo_m.setInteractive({draggable:true});
+
+}else if (numero == 3){
+
+huevo_d = this.physics.add.image(550, y_huevo, 'huevo');
+huevo_d.setTint(Phaser.Display.Color.GetColor(188, 195, 0));
+huevo_d.preFX.addGlow();
+huevo_d.setInteractive({draggable:true});
+
+}
+
+}
+
 
 function update ()
 {
 
-if( inZone && this.input.activePointer.isDown){
+if( B_inZone && this.input.activePointer.isDown){
 console.log("slay");
 huevo_b.destroy();
+}
+
+if( M_inZone && this.input.activePointer.isDown){
+console.log("slay");
+huevo_m.destroy();
+}
+
+if( D_inZone && this.input.activePointer.isDown){
+console.log("Slay");
+huevo_d.destroy();
 }
 
 }
