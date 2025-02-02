@@ -19,7 +19,7 @@ height: canvas_h,
     default: 'arcade',
     arcade: {
      debug: true,
-	 gravity: { y: 200}
+	 gravity: { y: 0}
     }
   },
 
@@ -71,27 +71,222 @@ hay.setScale(sprite_scale);
 secondHay = this.add.image(x_huevera, 325, 'hay');
 secondHay.setScale(sprite_scale);
 
-huevera_b = this.physics.add.staticImage(x_huevera, 110, 'huevera');
+let dorado = Phaser.Display.Color.GetColor(188, 195, 0);
+let marron = Phaser.Display.Color.GetColor(192, 128, 16);
+
+huevera_d = this.add.image(x_huevera, 390, 'huevera');
+huevera_d.setScale(sprite_scale);
+huevera_d.setTint(dorado);
+huevera_d.preFX.addGlow(0xBCC300, 1);
+
+huevera_m = this.add.image(x_huevera, y_huevo, 'huevera');
+huevera_m.setScale(sprite_scale);
+huevera_m.setTint(marron);
+
+huevera_b = this.add.image(x_huevera, 110, 'huevera');
 huevera_b.setScale(sprite_scale);
-huevera_b.setTint(Phaser.Display.Color.GetColor(255, 255, 255));
 
-huevera_b.setSize(200, 200, true);
+this.physics.world.enable(huevera_d);
+this.physics.world.enable(huevera_m);
+this.physics.world.enable(huevera_b);
 
-huevo_b = this.physics.add.image(450, y_huevo, 'huevo');
-huevo_b.setTint(Phaser.Display.Color.GetColor(225, 225, 225));
-huevo_b.setInteractive({draggable:true});
+huevo_shadow = this.add.image(-10000, -10000, 'huevo');
+huevo_shadow.setTint("#000000");
+huevo_shadow.alpha = .5;
+huevo_shadow.setScale(1.3);
 
+this.time.addEvent({
+	delay: 2000,
+	callback: generateEgg,
+	callbackScope: this,
+	loop: true
+});
+
+}
+
+function generateEgg() {
+
+let eggTypes = ['huevo_b', 'huevo_m', 'huevo_d'];
+let randomType = Phaser.Math.RND.pick(eggTypes);
+
+let dorado = Phaser.Display.Color.GetColor(188, 195, 0);
+let marron = Phaser.Display.Color.GetColor(192, 128, 16);
+
+let x = Phaser.Math.Between(200, canvas_w - 100);
+let y = 0;
+
+let egg = this.add.image(x, y, 'huevo');
+egg.setInteractive({ draggable:true });
+
+if (randomType === 'huevo_m') {
+	egg.setTint(Phaser.Display.Color.GetColor(192, 128, 16));
+	
+	egg.on('pointerdown', function() {
+		console.log("Huevo marron!");
+
+		huevo_shadow.x = this.x + 8;
+		huevo_shadow.y = this.y + 8;
+
+		this.setScale(1.3);
+	});
+
+} else if (randomType === 'huevo_d') {
+	egg.setTint(Phaser.Display.Color.GetColor(188, 195, 0));
+	egg.preFX.addGlow(0xBCC300, 1);
+
+	egg.on('pointerdown', function(){
+		console.log("Huevo dorado!");
+
+		huevo_shadow.x = this.x + 8;
+		huevo_shadow.y = this.y + 8;
+
+		this.setScale(1.3);
+	});
+} else {
+	egg.on('pointerdown', function(){
+		console.log("Huevo blanco!");
+
+		huevo_shadow.x = this.x + 8;
+		huevo_shadow.y = this.y + 8;
+
+		this.setScale(1.3);
+	});
+}
+
+
+this.physics.world.enable(egg);
+egg.body.setVelocityY(100);
+
+this.physics.add.overlap(egg, huevera_b, function(){
+	if (randomType === 'huevo_b'){
+		egg.destroy();
+		console.log("Huevo blanco detectado + 100 puntos");
+		}
+
+	huevo_shadow.x = -10000;
+	huevo_shadow.y = -10000;
+
+	});
+
+this.physics.add.overlap(egg, huevera_m, function(){
+	if (randomType === 'huevo_m'){
+		egg.destroy();
+		console.log("Huevo marron detectado + 250 puntos");
+		}
+
+	huevo_shadow.x = -10000;
+	huevo_shadow.y = -10000;
+
+	});
+
+this.physics.add.overlap(egg, huevera_d, function(){
+	if (randomType === 'huevo_d'){
+		egg.destroy();
+		console.log("Huevo dorado detectado + 500 puntos");
+		}
+
+	huevo_shadow.x = -10000;
+	huevo_shadow.y = -10000;
+
+	});
+
+this.input.on('drag', function (pointer, object, x, y) {
+	object.x = x;
+	object.y = y;
+
+	huevo_shadow.x = this.x + 8;
+	huevo_shadow.y = this.y + 8;
+
+	if (Phaser.Geom.Intersects.RectangleToRectangle(huevera_b.getBounds(), object.getBounds())){
+		console.log("Huevo dentro de huevera blanca!");
+
+		}	
+
+	if (Phaser.Geom.Intersects.RectangleToRectangle(huevera_d.getBounds(), object.getBounds())){
+		console.log("Huevo dentro de huevera dorada!");
+	}
+
+	if (Phaser.Geom.Intersects.RectangleToRectangle(huevera_m.getBounds(), object.getBounds())){
+		console.log("Huevo dentro de huevera marron!");
+	}
+
+});
+
+this.input.on('dragend', function (pointer, object, x, y) {
+	object.setScale(1);
+	
+	huevo_shadow.x = -10000;
+    huevo_shadow.y = -10000;
+});
+
+}
+
+/*
+
+huevo_m = this.add.image(350, y_huevo, 'huevo');
+huevo_m.setTint(marron);
+huevo_m.setInteractive({ draggable:true });
+huevo_m.on('pointerdown', function(){
+	console.log("Huevo marron");
+
+	huevo_shadow.x = this.x + 8;
+	huevo_shadow.y = this.y + 8;
+
+	this.setScale(1.3);
+});
+
+huevo_d = this.add.image(550, y_huevo, 'huevo');
+huevo_d.setTint(dorado);
+huevo_d.preFX.addGlow(0xBCC300, 1);
+huevo_d.setInteractive({ draggable:true });
+huevo_d.on('pointerdown', function(){
+	console.log("Huevo dorado");
+
+	huevo_shadow.x = this.x + 8;
+	huevo_shadow.y = this.y + 8;
+
+	this.setScale(1.3);
+});
+
+huevo_b = this.add.image(450, y_huevo, 'huevo');
+huevo_b.setInteractive({ draggable:true });
 huevo_b.on('pointerdown', function(){
-console.log('Huevo blanco!');
-this.setScale(1.3);
+	console.log("Huevo blanco");
+
+	huevo_shadow.x = this.x + 8;
+	huevo_shadow.y = this.y + 8;
+
+	this.setScale(1.3);
 });
-this.input.on('drag', function(pointer, object, x, y){
-object.x = x;
-object.y = y;
+
+
+this.input.on('drag', function (pointer, object, x, y) {
+	object.x = x;
+	object.y = y;
+
+	huevo_shadow.x = x + 8;
+	huevo_shadow.y = y + 8;
+
+	if (Phaser.Geom.Intersects.RectangleToRectangle(huevera_b.getBounds(), object.getBounds())){
+		console.log("Huevo dentro de huevera blanca!");
+	}
+
+	if (Phaser.Geom.Intersects.RectangleToRectangle(huevera_d.getBounds(), object.getBounds())){
+		console.log("Huevo dentro de huevera dorada!");
+		}
+
+	if (Phaser.Geom.Intersects.RectangleToRectangle(huevera_m.getBounds(), object.getBounds())){
+		console.log("Huevo dentro de huevera marron!");
+	}
 });
-this.input.on('dragend', function(pointer, object, x, y){
-object.setScale(1);
+
+this.input.on('dragend', function (pointer, object, x, y) {
+	object.setScale(1);
+
+	huevo_shadow.x = -10000;
+	huevo_shadow.y = -10000;
 });
+
 
 this.physics.add.overlap(huevera_b, huevo_b, function() {
 B_inZone = true;
@@ -100,27 +295,7 @@ B_inZone = true;
 huevo_b.setBounce(1, 1);
 huevo_b.setCollideWorldBounds(true);
 
-huevera_m = this.physics.add.staticImage(x_huevera, y_huevo, 'huevera');
-huevera_m.setScale(sprite_scale);
-huevera_m.setTint(Phaser.Display.Color.GetColor(153,76, 0));
 
-huevera_m.setSize(200, 200, true);
-
-huevo_m = this.physics.add.image(350, y_huevo, 'huevo');
-huevo_m.setTint(Phaser.Display.Color.GetColor(153, 76, 0));
-huevo_m.setInteractive({draggable:true});
-
-huevo_m.on('pointerdown', function(){
-console.log('Huevo marron!');
-this.setScale(1.3);
-});
-this.input.on('drag', function(pointer, object, x, y){
-object.x = x;
-object.y = y;
-});
-this.input.on('dragend', function(pointer, object, x, y){
-object.setScale(1);
-});
 
 this.physics.add.overlap(huevera_m, huevo_m, function() {
 M_inZone = true;
@@ -129,31 +304,7 @@ M_inZone = true;
 huevo_m.setBounce(1, 1);
 huevo_m.setCollideWorldBounds(true);
 
-huevera_d = this.physics.add.staticImage(x_huevera, 390, 'huevera');
-huevera_d.setScale(sprite_scale);
-huevera_d.setTint(Phaser.Display.Color.GetColor(188, 195, 0));
-huevera_d.preFX.addGlow();
-//huevera_d.setRotation(90); forma yo
-//huevera_d.angle = 90; forma rafa
 
-huevera_d.setSize(200, 200, true);
-
-huevo_d = this.physics.add.image(550, y_huevo, 'huevo');
-huevo_d.setTint(Phaser.Display.Color.GetColor(188, 195, 0));
-huevo_d.preFX.addGlow();
-huevo_d.setInteractive({draggable:true});
-
-huevo_d.on('pointerdown', function(){
-console.log('Huevo dorado!');
-this.setScale(1.3);
-});
-this.input.on('drag', function(pointer, object, x, y){
-object.x = x;
-object.y = y;
-});
-this.input.on('dragend', function(pointer, object, x, y){
-object.setScale(1);
-});
 
 this.physics.add.overlap(huevera_d, huevo_d, function() {
 D_inZone = true;
@@ -162,36 +313,6 @@ D_inZone = true;
 huevo_d.setBounce(1, 1);
 huevo_d.setCollideWorldBounds(true);
 
-//this.creacionHuevos();
-
-}
-
-/*
-
-function creacionHuevos(){
-
-let numero = Phaser.Math.Between(1, 3);
-
-if (numero == 1){
-
-huevo_b = this.physics.add.image(450, y_huevo, 'huevo');
-huevo_b.setTint(Phaser.Display.Color.GetColor(225, 225, 225));
-huevo_b.setInteractive({draggable:true});
-
-}else if (numero == 2){
-
-huevo_m = this.physics.add.image(350, y_huevo, 'huevo');
-huevo_m.setTint(Phaser.Display.Color.GetColor(153, 76, 0));
-huevo_m.setInteractive({draggable:true});
-
-}else if (numero == 3){
-
-huevo_d = this.physics.add.image(550, y_huevo, 'huevo');
-huevo_d.setTint(Phaser.Display.Color.GetColor(188, 195, 0));
-huevo_d.preFX.addGlow();
-huevo_d.setInteractive({draggable:true});
-
-}
 
 }
 
