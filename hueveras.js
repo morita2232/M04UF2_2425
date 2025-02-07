@@ -210,7 +210,12 @@ this.physics.add.overlap(egg, huevera_b, function(){
 		}
 		else
 		{
+		egg.destroy();
+
 		this.incorrectSound.play();
+		
+		console.log("Huevera incorrecta >:(");
+		countdown_text.text = countdown -= 1;
 		}
 
 	huevo_shadow.x = -10000;
@@ -230,7 +235,12 @@ this.physics.add.overlap(egg, huevera_m, function(){
 		}
 		else
 		{
+		egg.destroy();
+
 		this.incorrectSound.play();
+		
+		console.log("Huevera incorrecta >:(");
+		countdown_text.text = countdown -= 5;
 		}
 
 	huevo_shadow.x = -10000;
@@ -249,7 +259,12 @@ this.physics.add.overlap(egg, huevera_d, function(){
 		}
 		else
 		{
+		egg.destroy();
+
 		this.incorrectSound.play();
+		
+		console.log("Huevera incorrecta >:(");
+		countdown_text.text = countdown -= 10;
 		}
 
 	huevo_shadow.x = -10000;
